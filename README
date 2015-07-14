@@ -1,0 +1,41 @@
+jarsnap.py
+==========
+
+Make fat jars
+
+jarsnap.py helps you create deployable executable JAR files by combining
+libraries and your main program into a single archive.
+
+Usage
+-----
+
+Its most basic usage is as follows:
+
+    $ jarsnap -m Main myprog.jar lib1.jar lib2.jar
+
+This creates a runnable JAR from the three JAR inputs with Main as the main
+class. There are other options available as well. Use `jarsnap -h` for more
+information.
+
+Installation
+------------
+
+jarsnap.py can be installed using the Python setuptools module. It must be
+installed to automate the installation.
+
+    # python3 setup.py install
+
+Hacking
+-------
+
+We strive to be [PEP 8][4] compliant, but there are exceptions to every
+rule. jarsnap.py is [free software][2], released under version 3 of the GNU
+Affero General Public License. You are free to copy, share, and modify the
+software under those terms. See [COPYING](COPYING) for more details.
+
+To submit a patch, [submit your diff to Delwink][3] or us GitHub's pull request
+system.
+
+[2]: http://gnu.org/philosophy/free-sw.html
+[3]: mailto:contribute@delwink.com
+[4]: https://www.python.org/dev/peps/pep-0008/
