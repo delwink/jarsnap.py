@@ -77,12 +77,14 @@ There is NO WARRANTY, to the extent permitted by law.
 
 Written by {}""".format(__title__, __version__, __author__)
 
+    _HELPEXIT = 'Use `{} --help` for more information.'.format(__title__)
+
     try:
         opts, args = gnu_getopt(argv[1:], 'vho:m:',
                                 ['version', 'help', 'output=', 'main-class='])
     except GetoptError as e:
         print('{}: {}'.format(__title__, e))
-        exit(_HELP)
+        exit(_HELPEXIT)
 
     main_class = ''
     output_path = 'fat.jar'
@@ -101,7 +103,7 @@ Written by {}""".format(__title__, __version__, __author__)
 
     if not main_class:
         print('{}: main class was not set!'.format(__title__))
-        exit(_HELP)
+        exit(_HELPEXIT)
 
     make_fat_jar(args, main_class, output_path)
 
