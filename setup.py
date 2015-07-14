@@ -12,10 +12,10 @@ if not version:
 setup(
     name = 'jarsnap.py',
     version = version,
-    scripts = ['jarsnap']
-    py_modules = ['jarsnap')
+    scripts = ['jarsnap'],
+    py_modules = ['jarsnap'],
 
-    package_data = {'': ['README', 'COPYING']}
+    package_data = {'': ['README', 'COPYING']},
 
     author = 'Delwink, LLC',
     author_email = 'support@delwink.com',
