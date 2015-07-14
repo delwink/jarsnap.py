@@ -29,23 +29,26 @@ __version__ = '1.0.4'
 __author__ = 'David McMackins II'
 
 def make_fat_jar(jars, main_class, output_path='fat.jar'):
-    work = join(gettempdir(), '{} {}'.format(__title__, datetime.now()))
-    if not exists(work):
-        mkdir(work)
+    workdir = join(gettempdir(), '{} {}'.format(__title__, datetime.now()))
+    if not exists(workdir):
+        mkdir(workdir)
+
+    meta_inf = join(workdir, 'META-INF')
+    mkdir(meta_inf)
 
     try:
         for jar in jars:
-            unpack_archive(jar, work, 'zip')
+            unpack_archive(jar, workdir, 'zip')
 
-        with open(join(work, 'META-INF', 'MANIFEST.MF'), 'w') as mf:
+        with open(join(meta_inf, 'MANIFEST.MF'), 'w') as mf:
             mf.write('Manifest-Version: 1.0\r\n'
                      + 'Created-By: {} {}\r\n'.format(__title__, __version__)
                      + 'Main-Class: {}\r\n\r\n'.format(main_class))
 
-        out_name = make_archive(output_path, 'zip', root_dir=work)
+        out_name = make_archive(output_path, 'zip', root_dir=workdir)
         rename(out_name, output_path)
     finally:
-        rmtree(work)
+        rmtree(workdir)
 
 def main(argv):
     _HELP = """{} - make fat jars
