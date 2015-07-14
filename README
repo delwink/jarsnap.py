@@ -14,7 +14,7 @@ Its most basic usage is as follows:
     $ jarsnap -m Main myprog.jar lib1.jar lib2.jar
 
 This creates a runnable JAR from the three JAR inputs with Main as the main
-class. There are other options available as well. Use `jarsnap -h` for more
+class. There are other options available as well. Use `jarsnap --help` for more
 information.
 
 Installation
