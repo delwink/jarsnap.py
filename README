@@ -17,6 +17,10 @@ This creates a runnable JAR from the three JAR inputs with Main as the main
 class. There are other options available as well. Use `jarsnap --help` for more
 information.
 
+The installation (see below) also provides a `jarsnap` module which has the
+functions `make_fat_jar()` and `main()` which can be used when making other
+user interfaces to jarsnap.py's functionality.
+
 Installation
 ------------
 
