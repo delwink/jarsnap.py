@@ -25,7 +25,7 @@ from sys import argv
 from tempfile import gettempdir
 
 __title__ = 'jarsnap.py'
-__version__ = '1.0.3'
+__version__ = '1.0.4'
 __author__ = 'David McMackins II'
 
 def make_fat_jar(jars, main_class, output_path='fat.jar'):
@@ -50,7 +50,7 @@ def make_fat_jar(jars, main_class, output_path='fat.jar'):
 def main(argv):
     _HELP = """{} - make fat jars
 
-Usage: {} [-h] [-v] [-o|--output OUTPUT] <-m|--main-class MAIN>
+Usage: {} [options] <-m|--main-class MAIN> jar1 [jar2 [jar3 ...]]
 
 Options:
        -h, --help
