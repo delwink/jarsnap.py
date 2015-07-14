@@ -25,7 +25,7 @@ from sys import argv
 from tempfile import gettempdir
 
 __title__ = 'jarsnap.py'
-__version__ = '1.0.1'
+__version__ = '1.0.2'
 __author__ = 'David McMackins II'
 
 def make_fat_jar(jars, main_class, output_path='fat.jar'):
@@ -56,14 +56,15 @@ Options:
        -h, --help
               Displays this help and exits.
 
-       -v, --version
-              Displays version information and exits.
+       -m, --main-class=MAIN
+              Sets the main class path to MAIN.
 
        -o, --output=OUTPUT
               Sets the output file path to OUTPUT. Defaults to 'fat.jar'
 
-       -m, --main-class=MAIN
-              Sets the main class path to MAIN.""".format(__title__, __title__)
+       -v, --version
+              Displays version information and exits.""".format(__title__,
+                                                                __title__)
 
     _VERSION = """{} {}
 Copyright (C) 2015 Delwink, LLC
@@ -77,7 +78,8 @@ Written by {}""".format(__title__, __version__, __author__)
         opts, args = gnu_getopt(argv[1:], 'vho:m:',
                                 ['version', 'help', 'output=', 'main-class='])
     except GetoptError as e:
-        exit('{}: {}'.format(__title__, e))
+        print('{}: {}'.format(__title__, e))
+        exit(_HELP)
 
     main_class = ''
     output_path = 'fat.jar'
@@ -95,7 +97,8 @@ Written by {}""".format(__title__, __version__, __author__)
             main_class = value
 
     if not main_class:
-        exit('{}: main class was not set!'.format(__title__))
+        print('{}: main class was not set!'.format(__title__))
+        exit(_HELP)
 
     make_fat_jar(args, main_class, output_path)
 
