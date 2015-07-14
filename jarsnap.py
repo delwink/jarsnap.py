@@ -50,7 +50,7 @@ def make_fat_jar(jars, main_class, output_path='fat.jar'):
     finally:
         rmtree(workdir)
 
-def main(argv):
+def main(argv, name='jarsnap'):
     _HELP = """{} - make fat jars
 
 Usage: {} [options] <-m|--main-class MAIN> jar1 [jar2 [jar3 ...]]
@@ -67,7 +67,7 @@ Options:
 
        -v, --version
               Displays version information and exits.""".format(__title__,
-                                                                __title__)
+                                                                name)
 
     _VERSION = """{} {}
 Copyright (C) 2015 Delwink, LLC
@@ -77,10 +77,10 @@ There is NO WARRANTY, to the extent permitted by law.
 
 Written by {}""".format(__title__, __version__, __author__)
 
-    _HELPEXIT = 'Use `{} --help` for more information.'.format(__title__)
+    _HELPEXIT = 'Use `{} --help` for more information.'.format(name)
 
     try:
-        opts, args = gnu_getopt(argv[1:], 'vho:m:',
+        opts, args = gnu_getopt(argv, 'vho:m:',
                                 ['version', 'help', 'output=', 'main-class='])
     except GetoptError as e:
         print('{}: {}'.format(__title__, e))
@@ -108,4 +108,4 @@ Written by {}""".format(__title__, __version__, __author__)
     make_fat_jar(args, main_class, output_path)
 
 if __name__ == '__main__':
-    main(argv)
+    main(argv[1:])
