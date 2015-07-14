@@ -39,7 +39,7 @@ def make_fat_jar(jars, main_class, output_path='fat.jar'):
 
         with open(join(work, 'META-INF', 'MANIFEST.MF'), 'w') as mf:
             mf.write('Manifest-Version: 1.0\r\n'
-                     + 'X-Comment: {}'.format(__title__, __version__)
+                     + 'X-Comment: {}\r\n'.format(__title__, __version__)
                      + 'Main-Class: {}\r\n\r\n'.format(main_class))
 
         out_name = make_archive(output_path, 'zip', root_dir=work)
