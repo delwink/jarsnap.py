@@ -18,14 +18,14 @@
 
 from datetime import datetime
 from getopt import gnu_getopt, GetoptError
-from os import mkdir, remove, rename
+from os import listdir, mkdir, remove, rename
 from os.path import join, exists
 from shutil import rmtree, make_archive, unpack_archive
 from sys import argv
 from tempfile import gettempdir
 
 __title__ = 'jarsnap.py'
-__version__ = '1.0.4'
+__version__ = '1.0.5'
 __author__ = 'David McMackins II'
 
 def make_fat_jar(jars, main_class, output_path='fat.jar'):
@@ -39,6 +39,10 @@ def make_fat_jar(jars, main_class, output_path='fat.jar'):
     try:
         for jar in jars:
             unpack_archive(jar, workdir, 'zip')
+
+        for f in listdir(meta_inf):
+            if f.endswith('.SF') or f.endswith('.DSA') or f.endswith('.RSA'):
+                remove(join(meta_inf, f))
 
         with open(join(meta_inf, 'MANIFEST.MF'), 'w') as mf:
             mf.write('Manifest-Version: 1.0\r\n'
