@@ -17,19 +17,20 @@
 ##
 
 from datetime import datetime
-from getopt import gnu_getopt, GetoptError
+from getopt import GetoptError, gnu_getopt
 from os import mkdir, remove, rename
 from os.path import join, exists
-from shutil import rmtree, make_archive, unpack_archive
+from shutil import copy, make_archive, rmtree, unpack_archive
 from sys import argv
 from tempfile import gettempdir
 
 __title__ = 'jarsnap.py'
-__version__ = '1.0.4'
+__version__ = '1.1.0'
 __author__ = 'David McMackins II'
 
-def make_fat_jar(jars, main_class, output_path='fat.jar'):
-    workdir = join(gettempdir(), '{} {}'.format(__title__, datetime.now()))
+def make_fat_jar(jars, main_class, output_path='fat.jar', data=[]):
+    now = datetime.now()
+    workdir = join(gettempdir(), '{} {}'.format(__title__, now))
     if not exists(workdir):
         mkdir(workdir)
 
@@ -40,9 +41,13 @@ def make_fat_jar(jars, main_class, output_path='fat.jar'):
         for jar in jars:
             unpack_archive(jar, workdir, 'zip')
 
+        for datum in data:
+            copy(datum, workdir)
+
         with open(join(meta_inf, 'MANIFEST.MF'), 'w') as mf:
             mf.write('Manifest-Version: 1.0\r\n'
-                     + 'Created-By: {} {}\r\n'.format(__title__, __version__)
+                     + 'Created-By: {} {}, {}\r\n'.format(__title__,
+                                                          __version__, now)
                      + 'Main-Class: {}\r\n\r\n'.format(main_class))
 
         out_name = make_archive(output_path, 'zip', root_dir=workdir)
@@ -53,7 +58,9 @@ def make_fat_jar(jars, main_class, output_path='fat.jar'):
 def main(argv, name='jarsnap'):
     _HELP = """{} - make fat jars
 
-Usage: {} [options] <-m|--main-class MAIN> jar1 [jar2 [jar3 ...]]
+Usage: {} [options] <-m|--main-class MAIN> file1 [file2 [file3...]]
+
+Files with .jar extension will be extracted; others will be included normally.
 
 Options:
        -h, --help
@@ -80,32 +87,51 @@ Written by {}""".format(__title__, __version__, __author__)
     _HELPEXIT = 'Use `{} --help` for more information.'.format(name)
 
     try:
-        opts, args = gnu_getopt(argv, 'vho:m:',
-                                ['version', 'help', 'output=', 'main-class='])
+        opts, args = gnu_getopt(argv, 'dhm:o:v',
+                                ['debug', 'help', 'main-class=', 'output=',
+                                 'version'])
     except GetoptError as e:
         print('{}: {}'.format(__title__, e))
         exit(_HELPEXIT)
 
+    debug = False
     main_class = ''
     output_path = 'fat.jar'
 
     for key, value in opts:
-        if key in ('-v', '--version'):
-            print(_VERSION)
-            exit(0)
+        if key in ('-d', '--debug'):
+            debug = True
         elif key in ('-h', '--help'):
             print(_HELP)
             exit(0)
-        elif key in ('-o', '--output'):
-            output_path = value
         elif key in ('-m', '--main-class'):
             main_class = value
+        elif key in ('-o', '--output'):
+            output_path = value
+        elif key in ('-v', '--version'):
+            print(_VERSION)
+            exit(0)
 
     if not main_class:
         print('{}: main class was not set!'.format(__title__))
         exit(_HELPEXIT)
 
-    make_fat_jar(args, main_class, output_path)
+    jars = []
+    data = []
+
+    for path in args:
+        if path.lower().endswith('.jar'):
+            jars.append(path)
+        else:
+            data.append(path)
+
+    try:
+        make_fat_jar(jars, main_class, output_path, data)
+    except Exception as e:
+        if debug:
+            raise
+
+        print('{}: {}'.format(name, e))
 
 if __name__ == '__main__':
     main(argv[1:])
