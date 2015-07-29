@@ -37,11 +37,11 @@ def make_fat_jar(jars, main_class, output_path='fat.jar', data=[]):
     meta_inf = join(workdir, 'META-INF')
     mkdir(meta_inf)
 
-    manifest = '''Manifest-Version: 1.0
+    manifest = """Manifest-Version: 1.0
 Created-By: {} {} on {}
 Main-Class: {}
 
-'''.replace('\n', '\r\n').format(__title__, __version__, now, main_class)
+""".replace('\n', '\r\n').format(__title__, __version__, now, main_class)
 
     try:
         for jar in jars:
