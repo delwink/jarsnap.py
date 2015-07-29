@@ -44,6 +44,10 @@ def make_fat_jar(jars, main_class, output_path='fat.jar', data=[]):
         for datum in data:
             copy(datum, workdir)
 
+        for f in listdir(meta_inf):
+            if f.endswith('.SF') or f.endswith('.DSA') or f.endswith('.RSA'):
+                remove(join(meta_inf, f))
+
         with open(join(meta_inf, 'MANIFEST.MF'), 'w') as mf:
             mf.write('Manifest-Version: 1.0\r\n'
                      + 'Created-By: {} {}, {}\r\n'.format(__title__,
