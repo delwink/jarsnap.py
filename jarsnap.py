@@ -18,14 +18,14 @@
 
 from datetime import datetime
 from getopt import GetoptError, gnu_getopt
-from os import mkdir, remove, rename
+from os import listdir, mkdir, remove, rename
 from os.path import join, exists
 from shutil import copy, make_archive, rmtree, unpack_archive
 from sys import argv
 from tempfile import gettempdir
 
 __title__ = 'jarsnap.py'
-__version__ = '1.1.0'
+__version__ = '1.1.1'
 __author__ = 'David McMackins II'
 
 def make_fat_jar(jars, main_class, output_path='fat.jar', data=[]):
@@ -36,6 +36,12 @@ def make_fat_jar(jars, main_class, output_path='fat.jar', data=[]):
 
     meta_inf = join(workdir, 'META-INF')
     mkdir(meta_inf)
+
+    manifest = '''Manifest-Version: 1.0
+Created-By: {} {} on {}
+Main-Class: {}
+
+'''.replace('\n', '\r\n').format(__title__, __version__, now, main_class)
 
     try:
         for jar in jars:
@@ -49,10 +55,7 @@ def make_fat_jar(jars, main_class, output_path='fat.jar', data=[]):
                 remove(join(meta_inf, f))
 
         with open(join(meta_inf, 'MANIFEST.MF'), 'w') as mf:
-            mf.write('Manifest-Version: 1.0\r\n'
-                     + 'Created-By: {} {}, {}\r\n'.format(__title__,
-                                                          __version__, now)
-                     + 'Main-Class: {}\r\n\r\n'.format(main_class))
+            mf.write(manifest)
 
         out_name = make_archive(output_path, 'zip', root_dir=workdir)
         rename(out_name, output_path)
